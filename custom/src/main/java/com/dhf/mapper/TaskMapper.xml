@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhf.mapper.TaskMapper">
+
+    <select id="selectTasksByCode" parameterType="String" resultType="map">
+      select t.*,ua.appraise_detail,ua.appraise_level
+      from (select ut.id,ut.categoryId,ut.category,ut.status,ut.desc,floor(ut.bonus) as bonus,floor(ut.maxbonus) as maxbonus,ut.finishTime,ut.appraise,ut.address,u.nickName as username,u.image as userimage,u1.nickName as workername,u1.image as workerimage
+            from user_task ut,user1 u,user1 u1
+            where ut.userId=u.Id and ut.userId=u1.Id) t left join user_task_appraise ua
+      on t.appraise=ua.id
+      where t.address=#{code} and t.status=0
+    </select>
+
+</mapper>
