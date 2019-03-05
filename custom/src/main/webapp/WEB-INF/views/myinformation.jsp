@@ -25,7 +25,7 @@
 <body>
 	<div id="div3">
 	    <div id="title">
-	        <a id="a1" href="index.html"><b>生活服务平台</b></a>
+	        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
 			<a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
             <span><c:if test="${sessionScope.city == null}">北京市</c:if><c:if test="${sessionScope.city != null}">${sessionScope.city.name}</c:if></span>
             <div id="div9">
@@ -75,9 +75,9 @@
 			</div>
 			<div class="chooseRs">				
 				<div id="datail_Text">
-					<h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自我说明&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="linkweb"></span></h5>
+					<h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自我说明&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <%--<span id="linkweb"></span>--%></h5>
 					<textarea cols="40" rows="6" ></textarea><br>
-					<input type="button" name="button" onclick="" value="like">
+					<input type="button" name="button" onclick="" value="提交">
 				</div>
 			</div>
 			<div class="chooseRs1">
@@ -93,21 +93,7 @@
 			</div>
 		</div> 
 	</div>
-	<script>
-		setInterval("linkweb.innerHTML=new Date().toLocaleString()",1000);
-	</script>
 	<script language="javascript">
-		function time1(){
-		now=new Date(); 定义一个时间对象
-		n = now.getYear()+"-";//得到年份
-		y = now.getMonth()+"-";//得到月份
-		r = now.getDay();//得到天
-		h = now.getHours()+":"; //得到小时
-		m = now.getMinutes()+":"; //得到分钟
-		s = now.getSeconds(); //得到秒
-		document.all["time"].innerHTML="现在时间是："+n+y+r+"\n"+h+m+s;
-		}
-		setInterval('time1()',1000);
 
         var oImg1 = document.getElementById('img1');
         var oDiv2 = document.getElementById('information');
@@ -123,7 +109,7 @@
             }
         }
 	</script>
-	<script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.2.0.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 		  $("#task").click(function(){

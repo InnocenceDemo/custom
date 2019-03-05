@@ -1,59 +1,31 @@
 package com.dhf.domain;
 
+import java.util.List;
+
 /**
  *  分页信息 pojo类
  */
-public class PageBean {
-
-    //当前页码,默认第一页
-    private int curentPageNo = 1;
-    //总页数
+public class PageBean<T> {
+    //当前页码
+    private int currPage;
+    //每页显示的记录数
+    private int pageSize;
+    //总记录数
     private int totalCount;
-    //页面容量
-    private int pageSize=5;
-    //上一页
-    private int upPageNo;
-    //下一页
-    private int nextPageNo;
-    //要前往的页码,默认0
-    private int toPageNo = 0;
+    //总页数
+    private int totalPage;
+    //每页显示的数据
+    private List<T> list;
 
-    public void setToPageNo(Integer toPageNo) {
-        //新一页
-        this.toPageNo = (toPageNo-1) * pageSize ;
-        //设置跳转后当前的页码
-        setCurentPageNo(toPageNo);
+    //空的构造方法
+    public PageBean() { }
+
+    public int getCurrPage() {
+        return currPage;
     }
 
-    public Integer getTopageNo() {
-        return toPageNo;
-    }
-
-    public int getCurentPageNo() {
-        return curentPageNo;
-    }
-
-    //设置当前页码
-    public void setCurentPageNo(int curentPageNo) {
-        if (curentPageNo != 1) {
-            this.upPageNo = curentPageNo - 1;
-        }
-        this.nextPageNo = curentPageNo + 1;
-
-        this.curentPageNo = curentPageNo;
-    }
-
-    public int getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(int totalCount) {
-        if (totalCount%pageSize > 0) {
-            this.totalCount = (totalCount/pageSize)+1;
-        } else {
-            this.totalCount = totalCount/pageSize;
-        }
-
+    public void setCurrPage(int currPage) {
+        this.currPage = currPage;
     }
 
     public int getPageSize() {
@@ -64,19 +36,27 @@ public class PageBean {
         this.pageSize = pageSize;
     }
 
-    public int getUpPageNo() {
-        return upPageNo;
+    public int getTotalCount() {
+        return totalCount;
     }
 
-    public void setUpPageNo(int upPageNo) {
-        this.upPageNo = upPageNo;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
-    public int getNextPageNo() {
-        return nextPageNo;
+    public int getTotalPage() {
+        return totalPage;
     }
 
-    public void setNextPageNo(int nextPageNo) {
-        this.nextPageNo = nextPageNo;
+    public void setTotalPage(int totalPage) {
+        this.totalPage = totalPage;
+    }
+
+    public List<T> getList() {
+        return list;
+    }
+
+    public void setList(List<T> list) {
+        this.list = list;
     }
 }

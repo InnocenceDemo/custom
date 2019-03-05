@@ -25,6 +25,6 @@ public class GenreController {
         List<Map> genres = genreService.selectGenresByCategroyId(categoryId);
         Map map = new HashMap();
         map.put("genres", genres);
-        response.getWriter().write(JSON.toJSONString(map));
+        response.getWriter().write(JSON.toJSONString(map));//将map转化成json
     }
 }

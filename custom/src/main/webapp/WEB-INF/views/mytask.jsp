@@ -20,11 +20,41 @@
 		#img1{width: 50px;height: 50px;margin-top: 18px;margin-left: 20px;}
 		#information{width: 130px;height: 150px;background: red;margin-left: 20px;position: relative;z-index: 99;display: none;}
 	</style>
+	<script src="${pageContext.request.contextPath}/js/jquery-3.2.0.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/template-web.js"></script>
+	<script type="text/javascript">//显示所有技能
+    $(function() {
+        $("#prov").change(function() {
+            //获取获取被选中的id
+            var idVal = $("#prov option:selected").val();
+            //清空select的值
+            $("#commodityId").empty();
+            $.ajax({
+                url: "${base}/back/wxmember/amyskyWxMemberCommodityDetail/getCommodity.jhtml",
+                type: "POST",
+                data: "id=" + idVal,
+                success: function(ajaxJson) {
+                    if(ajaxJson.success) {
+                        //添加select第一个option
+                        $("#commodityId").append("<option selected value=''>---请选择---</option>");
+                        for(var i = 0; i < ajaxJson.obj.length; i++) {
+                            //添加option元素
+                            $("#commodityId").append("<option value='" + ajaxJson.obj[i].id + "'>" + ajaxJson.obj[i].commodityName + "</option>");
+                        }
+                    } else {
+                        alert(ajaxJson.msg);
+                    }
+                }
+            })
+        })
+    })
+
+	</script>
 </head>
 <body>
 	<div id="div3">
 	    <div id="title">
-	        <a id="a1" href="index.html"><b>生活服务平台</b></a>
+	        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
 			<a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
 			<span><c:if test="${sessionScope.city == null}">北京市</c:if><c:if test="${sessionScope.city != null}">${sessionScope.city.name}</c:if></span>
 			<div id="div9">
@@ -44,10 +74,10 @@
 		<div class="model_head">
 			<h3>我发布的任务</h3>
 		</div>
-		<div class="model_option">
+		<div class="model_option" id="model_option">
 			&nbsp;&nbsp;&nbsp;&nbsp;筛选：&nbsp;&nbsp;
 			<!-- 从数据库导入职位 -->
-			<select>
+			<select id="prov">
 				<option>All</option>
 				<option>外卖</option>
 				<option>月嫂</option>
