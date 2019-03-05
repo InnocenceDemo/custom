@@ -103,7 +103,7 @@
 <body style="height: 2000px;">
 <div id="div3">
     <div id="title">
-        <a id="a1" href="index.html"><b>生活服务平台</b></a>
+        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
         <a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
         <span><c:if test="${sessionScope.city == null}">北京市</c:if><c:if test="${sessionScope.city != null}">${sessionScope.city.name}</c:if></span>
         <div id="div9">

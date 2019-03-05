@@ -1,5 +1,6 @@
 package com.dhf.controller;
 
+import com.dhf.domain.PageBean;
 import com.dhf.service.CategoryService;
 import com.dhf.service.CityService;
 import com.dhf.service.ProvinceService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,10 +70,11 @@ public class PageController {
     }
 
     @RequestMapping(value = "/index/{code}")
-    public void goIndex(@PathVariable String code, ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void goIndex(@PathVariable String code, @RequestParam(defaultValue = "1") Integer page, ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> city = cityService.selectCityByCode(code);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        List<Map<String, Object>> tasks = taskService.selectTasksByCode(code);
+        PageBean<Map<String, Object>> pageBean = taskService.findByPaging(code, page);
+        List<Map<String, Object>> tasks = pageBean.getList();
         for (Map<String, Object> map : tasks) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 if (entry.getKey().equals("finishTime")) {
@@ -80,14 +84,37 @@ public class PageController {
             }
         }
         if (tasks.size() != 0) {
-            //mv.addObject("tasks", tasks);
             request.setAttribute("tasks", tasks);
         } else {
-            mv.addObject("msg","抱歉，该城市目前没有待接任务！");
+            request.setAttribute("msg", "抱歉，该城市目前没有待接任务！");
         }
-        //mv.addObject("city", city);
+        request.setAttribute("pageBean", pageBean);
         request.getSession().setAttribute("city", city);
         request.getRequestDispatcher("/index").forward(request, response);
+    }
+
+    @RequestMapping(value = "/index/{code}/{categoryId}")
+    public void goClassify(@PathVariable Integer categoryId,@PathVariable String code,@RequestParam(defaultValue = "1") Integer currPage,ModelAndView mv,HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        Map<String, Object> city = cityService.selectCityByCode(code);
+        PageBean<Map<String, Object>> pageBean = taskService.selectTasksByCategoryId(categoryId, code,currPage);
+        List<Map<String, Object>> tasks = pageBean.getList();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (Map<String, Object> map : tasks) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getKey().equals("finishTime")) {
+                    String finishTime = sdf.format(entry.getValue());
+                    entry.setValue(finishTime);
+                }
+            }
+        }
+        if (tasks.size() != 0) {
+            request.setAttribute("tasks", tasks);
+        } else {
+            request.setAttribute("msg", "抱歉，该城市目前没有待接任务！");
+        }
+        request.setAttribute("pageBean", pageBean);
+        request.getSession().setAttribute("city", city);
+        request.getRequestDispatcher("/index").forward(request,response);
     }
 
     @RequestMapping(value = "/becomeexpert")
