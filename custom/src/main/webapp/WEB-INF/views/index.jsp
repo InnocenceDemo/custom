@@ -163,7 +163,9 @@
                 //     oDiv1.style.display = 'none';
                 // }
                 // 当鼠标离开某对象范围时触发的事件
-
+                aLi[i].onmouseout=function () {
+                    oDiv1.style.display = 'none';
+                }
             }
             oDiv1.onmouseover=function(){
                 oDiv1.style.display = 'block';
@@ -186,60 +188,13 @@
                 }
             }
         }
-        //分页显示数据
-        function goPage(pno,psize){
-            out.print("执行goPage函数");
-            var itable = document.getElementById("table1");//获取table
-            var num = itable.rows.length;//得到记录总数
-            var totalPage = 0;
-            var pageSize = psize;//一页显示pageSize条记录
-            //计算总页数
-            if(num/pageSize > parseInt(num/pageSize)){
-                totalPage=parseInt(num/pageSize)+1;
-            }else{
-                totalPage=parseInt(num/pageSize);
-            }
-            //当前页数
-            var currentPage = pno;
-            //获取当前页第一条、最后一条记录的行号
-            var startRow = (currentPage - 1) * pageSize+1;
-            var endRow = currentPage * pageSize;
-            endRow = (endRow > num)? num : endRow;
-            //修改table中当前页对应的行的属性为显示，非本页的记录为隐藏
-            for(var i=1;i<(num+1);i++){
-                var irow = itable.rows[i-1];
-                if(i>=startRow && i<=endRow){
-                    irow.style.display = "block";
-                }else{
-                    irow.style.display = "none";
-                }
-            }
 
-            //分页页码列表
-            var tempStr = "共"+num+"条记录 分"+totalPage+"页 当前第"+currentPage+"页";
-            if(currentPage>1){
-                tempStr += "<a href=\"#\" onClick=\"goPage("+(1)+","+psize+")\">首页</a>";
-                tempStr += "<a href=\"#\" onClick=\"goPage("+(currentPage-1)+","+psize+")\"><上一页</a>"
-            }else{
-                tempStr += "首页";
-                tempStr += "<上一页";
-            }
-
-            if(currentPage<totalPage){
-                tempStr += "<a href=\"#\" onClick=\"goPage("+(currentPage+1)+","+psize+")\">下一页></a>";
-                tempStr += "<a href=\"#\" onClick=\"goPage("+(totalPage)+","+psize+")\">尾页</a>";
-            }else{
-                tempStr += "下一页>";
-                tempStr += "尾页";
-            }
-            document.getElementById("changePages").innerHTML = tempStr;
-        }
     </script>
 </head>
 <body style="height: 2000px;">
 <div id="div3">
     <div id="title">
-        <a id="a1" href="${pageContext.request.contextPath}/index"><b>生活服务平台</b></a>
+        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
         <a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
         <span><c:if test="${city == null}">北京市</c:if><c:if test="${city != null}">${city.name}</c:if></span>
         <c:if test="${login_user==null}">
@@ -268,7 +223,7 @@
             <script type="text/html" id="template1">
                 <ul>
                     {{ each genres as value i }}
-                        <li>{{value.genre}}</li><br/>
+                        <a href="${pageContext.request.contextPath}/index/${city.code}/{{value.categoryId}}"><li>{{value.genre}}</li></a><br/>
                     {{ /each}}
                 </ul>
             </script>
@@ -317,10 +272,24 @@
             </c:forEach>
         </c:if>
     </table>
-    <table width="60%" align="right">
-        <tr><td><div id="changePages" name="changePages"></div></td></tr>
+    <table border="0" cellspacing="0" cellpadding="0"  width="900px" align="center">
+        <tr>
+            <td align="right">
+                <span>第${pageBean.currPage}/${pageBean.totalPage}页</span>&nbsp;&nbsp;
+                <span>总记录数 ：${pageBean.totalCount}条&nbsp;&nbsp;每页显示：${pageBean.pageSize}条</span>
+                <span>
+                <c:if test="${pageBean.currPage != 1}">
+                    <a href="${pageContext.request.contextPath}/index/${city.code}?page=1">[首页]</a>&nbsp;&nbsp;
+                    <a href="${pageContext.request.contextPath}/index/${city.code}?page=${pageBean.currPage-1}">[上一页]</a>&nbsp;&nbsp;
+                </c:if>
+                <c:if test="${pageBean.currPage != pageBean.totalPage}">
+                    <a href="${pageContext.request.contextPath}/index/${city.code}?page=${pageBean.currPage+1}">[下一页]</a>&nbsp;&nbsp;
+                    <a href="${pageContext.request.contextPath}/index/${city.code}?page=${pageBean.totalPage}">[尾页]</a>&nbsp;&nbsp;
+                </c:if>
+            </span>
+            </td>
+        </tr>
     </table>
-
 </div>
 </body>
 </html>

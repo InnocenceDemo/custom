@@ -140,7 +140,7 @@
 	<!-- 悬赏专家 -->
 	<div id="div3">
 	    <div id="title">
-	        <a id="a1" href="index.html"><b>生活服务平台</b></a>
+	        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
 			<a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
 	        <span>北京市</span>
 			<div id="div9">
