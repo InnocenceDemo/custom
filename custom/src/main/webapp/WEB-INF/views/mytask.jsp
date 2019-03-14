@@ -61,9 +61,9 @@
 				<img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
 				<div id="information">
 					<ul id="ul2">
-						<li><a href="${pageContext.request.contextPath}/myinformation">我的信息</a></li><br>
+						<li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li><br>
 						<li><a href="${pageContext.request.contextPath}/updateinfo">更新信息</a></li><br>
-						<li><a href="${pageContext.request.contextPath}/mytask">我的任务</a></li><br>
+						<li><a href="${pageContext.request.contextPath}/${login_user.id}/mytask">我的任务</a></li><br>
 						<li><a href="${pageContext.request.contextPath}/user1/logout">退出</a></li>
 					</ul>
 				</div>
@@ -84,6 +84,7 @@
 				<option>小时工</option>
 			</select>
 		</div>
+
 		<div class="model_body">
 			<table>
 				<tr class="th">
@@ -93,36 +94,42 @@
 					<th>预期完成时间</th>
 					<th>类别</th>
 				</tr>
+				<c:if test="${mytasks!=null}">
+					<c:forEach items="${mytasks}" var="mytasks">
+						<tr>
+							<td>${mytasks.realName}</td>
+							<td>${mytasks.desc}</td>
+							<c:if test="${mytasks.status==0}"><td>待接取</td></c:if>
+							<c:if test="${mytasks.status==1}"><td>待完成</td></c:if>
+							<c:if test="${mytasks.status==2}"><td>已完成</td></c:if>
+							<c:if test="${mytasks.status==null}"><td>状态未知</td></c:if>
+							<td>${mytasks.finishTime}</td>
+							<td>${mytasks.category}</td>
+						</tr>
+					</c:forEach>
+				</c:if>
+				<c:if test="${mytasks==null}">
+						<tr><td colspan="5">当前无任务记录</td></tr>
+				</c:if>
+			</table>
+			<table border="0" cellspacing="0" cellpadding="0"  width="900px" align="center">
+				<tr>
+					<td align="right">
+						<span>第${pageBean_mytask.currPage}/${pageBean_mytask.totalPage}页</span>&nbsp;&nbsp;
+						<span>总记录数 ：${pageBean_mytask.totalCount}条&nbsp;&nbsp;每页显示：${pageBean_mytask.pageSize}条</span>
+						<span>
+                <c:if test="${pageBean_mytask.currPage != 1}">
+					<a href="${pageContext.request.contextPath}/${login_user.id}/mytask?page=1">[首页]</a>&nbsp;&nbsp;
+					<a href="${pageContext.request.contextPath}/${login_user.id}/mytask?page=${pageBean_mytask.currPage-1}">[上一页]</a>&nbsp;&nbsp;
+				</c:if>
+                <c:if test="${pageBean_mytask.currPage != pageBean_mytask.totalPage}">
+					<a href="${pageContext.request.contextPath}/${login_user.id}/mytask?page=${pageBean_mytask.currPage+1}">[下一页]</a>&nbsp;&nbsp;
+					<a href="${pageContext.request.contextPath}/${login_user.id}/mytask?page=${pageBean_mytask.totalPage}">[尾页]</a>&nbsp;&nbsp;
+				</c:if>
+            </span>
+					</td>
+				</tr>
 			</table>
 		</div>
-		<!-- 跳转页码 -->
-		<div id="pageToolbar"></div>
-		<script type="text/javascript" src="js/jquery-1.11.2.js"></script>
-		<script type="text/javascript" src="js/query.js"></script>
-		<script type="text/javascript" src="js/paging.js"></script>
-		<script language="JavaScript">
-            var oImg1 = document.getElementById('img1');
-            var oDiv2 = document.getElementById('information');
-
-            var flag=true;
-            oImg1.onclick=function () {
-                if (flag) {
-                    oDiv2.style.display = 'block';
-                    flag=false;
-                } else {
-                    oDiv2.style.display = 'none';
-                    flag=true;
-                }
-            }
-		</script>
-		<script>
-		$('#pageTool').Paging({pagesize:10,count:100,callback:function(page,size,count){
-			console.log(arguments)
-			alert('当前第 ' +page +'页,每页 '+size+'条,总页数：'+count+'页')
-			}});
-		// count设置信息数量，pagesize为每页显示信息数量。下面这个为100条信息，每页10条信息，共10页
-		$('#pageToolbar').Paging({pagesize:10,count:100,toolbar:true});
-		</script>
-	</div>
 </body>
 </html>

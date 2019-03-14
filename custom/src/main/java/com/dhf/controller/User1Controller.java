@@ -48,18 +48,20 @@ public class User1Controller {
     }
 
     @RequestMapping(value = "/login")
-    public void login(User1 user1, Model model, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public String login(User1 user1, Model model, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         user1.setPwd(MD5.getMD5(user1.getPwd()));
         User1 user = user1Service.checkLogin(user1);
         //不可以登录
         if (user == null) {
-            model.addAttribute("msg","用户名或者密码错误！");
-            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request,response);
+//            model.addAttribute("msg","用户名或者密码错误！");
+//            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request,response);
+            return "redirect:/WEB-INF/views/login.jsp";
         }
         //可以登录
-        model.addAttribute("msg",1);
+//        model.addAttribute("msg",1);
         request.getSession().setAttribute("login_user",user);
-        request.getRequestDispatcher("/index").forward(request,response);
+//        request.getRequestDispatcher("/index").forward(request,response);
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/logout")

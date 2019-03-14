@@ -25,21 +25,21 @@
 <body>
 	<div id="div3">
 	    <div id="title">
-	        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
+	        <a id="a1" href="${pageContext.request.contextPath}/index/${city.code}"><b>生活服务平台</b></a>
 			<a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
             <span><c:if test="${sessionScope.city == null}">北京市</c:if><c:if test="${sessionScope.city != null}">${sessionScope.city.name}</c:if></span>
             <div id="div9">
 				<img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
 				<div id="information">
 					<ul id="ul2">
-						<li><a href="${pageContext.request.contextPath}/myinformation">我的信息</a></li><br>
+						<li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li><br>
 						<li><a href="${pageContext.request.contextPath}/updateinfo">更新信息</a></li><br>
-						<li><a href="${pageContext.request.contextPath}/mytask">我的任务</a></li><br>
+						<li><a href="${pageContext.request.contextPath}/${login_user.id}/mytask">我的任务</a></li><br>
 						<li><a href="${pageContext.request.contextPath}/user1/logout">退出</a></li>
 					</ul>
 				</div>
 			</div>
-			<a class="a1" href="${pageContext.request.contextPath}/myinformation">信息</a>
+			<a class="a1" href="${pageContext.request.contextPath}/${login_user.id}/myinformation">信息</a>
 			<a class="a1" href="${pageContext.request.contextPath}/historychat">历史聊天</a>
 			<a class="a1" href="${pageContext.request.contextPath}/becomeexpert">成为悬赏专家</a>
 	    </div>
@@ -48,36 +48,30 @@
 		<div class ="main">
 			<table  border="0">
 				<tr>
-					<th rowspan="5"><img src="${pageContext.request.contextPath}/img/default.png" width="130px" height="130px"></th>
-					<td class="">用户名:</td>
-					<td>18341415412</td>
+					<th rowspan="5"><img src="${myinformation.image}" width="130px" height="130px"></th>
+					<td class="">用户名: ${myinformation.nickName}</td>
 				</tr>
 				<tr>
-					<td>真实姓名：</td>
-					<td>张三</td>
+					<td>真实姓名：${myinformation.realName}</td>
 				</tr>
 				<tr>
-					<td>Email:</td>
-					<td>14468556@qq.com</td>
+					<td>Email: ${myinformation.email}</td>
 				</tr>
 				<tr>
-					<td>手机号：</td>
-					<td>18345655565</td>
+					<td>手机号：${myinformation.telephone}</td>
 				</tr>
 				<tr>
-					<td>地址： </td>
-					<td> </td>
-				</tr>				
+					<td>地址： ${myinformation.addressDesc}</td>
+				</tr>
 			</table>
 			<div class="chooseBut">
 				<input type="button" name="detail" value="detail" id="datail">
 				<input type="button" name="task" value="task" id="task">
 			</div>
-			<div class="chooseRs">				
+			<div class="chooseRs">
 				<div id="datail_Text">
 					<h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自我说明&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <%--<span id="linkweb"></span>--%></h5>
-					<textarea cols="40" rows="6" ></textarea><br>
-					<input type="button" name="button" onclick="" value="提交">
+					<textarea cols="40" rows="6" >${myinformation.descr}</textarea><br>
 				</div>
 			</div>
 			<div class="chooseRs1">
@@ -89,9 +83,28 @@
 						<td>完成时间</td>
 						<td>操作</td>
 					</tr>
+					<c:if test="${mytaskList==[null]}">
+						<tr><td colspan="4">当前无任务记录</td></tr>
+					</c:if>
+					<c:if test="${mytaskList!=[null]}">
+						<c:forEach items="${mytaskList}" var="mytaskList">
+							<tr>
+								<td>${mytaskList.desc}</td>
+								<c:if test="${mytaskList.status==0}"><td>待接取</td></c:if>
+								<c:if test="${mytaskList.status==1}"><td>待完成</td></c:if>
+								<c:if test="${mytaskList.status==2}"><td>已完成</td></c:if>
+								<c:if test="${mytaskList.status==null}"><td>状态未知</td></c:if>
+								<td>${mytaskList.finishTime}</td>
+								<c:if test="${mytaskList.status==0}"><td>不可操作</td></c:if>
+								<c:if test="${mytaskList.status==1}"><td>不可操作</td></c:if>
+								<c:if test="${mytaskList.status==2}"><td>不可操作</td></c:if>
+								<c:if test="${mytaskList.status==null}"><td>不可操作</td></c:if>
+							</tr>
+						</c:forEach>
+					</c:if>
 				</table>
 			</div>
-		</div> 
+		</div>
 	</div>
 	<script language="javascript">
 
@@ -115,7 +128,7 @@
 		  $("#task").click(function(){
 		  	$("#datail").css({'background-color':'#eee'});
 		  	$(this).css({'background-color':'#fff'});
-		  	
+
 		  	$(".chooseRs").css({display:'none'});
 		    $(".chooseRs1").css({display:'block'});
 		  });
