@@ -1,18 +1,15 @@
 package com.dhf.controller;
 
 import com.dhf.domain.PageBean;
-import com.dhf.service.CategoryService;
-import com.dhf.service.CityService;
-import com.dhf.service.ProvinceService;
-import com.dhf.service.TaskService;
+import com.dhf.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,10 +34,27 @@ public class PageController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private WorkerService workerService;
+    
+    @Autowired
+    private MyinformationService myinformationService;
+
+    @Autowired
+    private MyTaskService myTaskService;
+
     @RequestMapping(value = {"/index","/"})
-    public ModelAndView goIndex(ModelAndView mv){
+    public ModelAndView goIndex(ModelAndView mv,HttpServletRequest request,HttpServletResponse response,Model model){
         List<Map> maps = categoryService.selectAllCategorys();
         mv.addObject("maps", maps);
+        if(request.getSession().getAttribute("city")==null){
+            Map city = new HashMap();
+            city.put("id",1);
+            city.put("code",110100);
+            city.put("name","北京市");
+            city.put("provincecode",110000);
+            request.getSession().setAttribute("city", city);
+        }
         mv.setViewName("index");
         return mv;
     }
@@ -70,7 +84,7 @@ public class PageController {
     }
 
     @RequestMapping(value = "/index/{code}")
-    public void goIndex(@PathVariable String code, @RequestParam(defaultValue = "1") Integer page, ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void goIndex(@PathVariable String code, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "1") Integer currPage, ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> city = cityService.selectCityByCode(code);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         PageBean<Map<String, Object>> pageBean = taskService.findByPaging(code, page);
@@ -90,13 +104,32 @@ public class PageController {
         }
         request.setAttribute("pageBean", pageBean);
         request.getSession().setAttribute("city", city);
+
+        //查找该地区所有专业人士信息
+        PageBean<Map<String, Object>> pageBean1 = workerService.selectAllWorkerMessage(code, currPage);
+        List<Map<String, Object>> worker = pageBean1.getList();
+        if (worker.size() != 0) {
+            request.setAttribute("worker", worker);
+        } else {
+            request.setAttribute("msg1", "抱歉，该城市目前没有专业人士为您服务！");
+        }
+        request.setAttribute("pageBean1", pageBean1);
         request.getRequestDispatcher("/index").forward(request, response);
     }
-
+    //实现单击专业人士头像，查看专业人士信息功能
+    @RequestMapping(value = "/index/showDetail/{userId}")
+    public String goWorkerMessage(@PathVariable Integer userId, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Map<String, Object> userMessage = workerService.selectWorkerMessage(userId);
+        request.setAttribute("userMessage", userMessage);
+        List<Map<String, Object>> taskList = workerService.selectWorkerAllTasks(userId);
+        request.setAttribute("taskList",taskList);
+        return "showDetail";
+    }
+    //实现单击技能显示查询结果
     @RequestMapping(value = "/index/{code}/{categoryId}")
-    public void goClassify(@PathVariable Integer categoryId,@PathVariable String code,@RequestParam(defaultValue = "1") Integer currPage,ModelAndView mv,HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+    public void goClassify(@PathVariable Integer categoryId,@PathVariable String code,@RequestParam(defaultValue = "1") Integer currPage, @RequestParam(defaultValue = "1") Integer page,ModelAndView mv,HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> city = cityService.selectCityByCode(code);
-        PageBean<Map<String, Object>> pageBean = taskService.selectTasksByCategoryId(categoryId, code,currPage);
+        PageBean<Map<String, Object>> pageBean = taskService.selectTasksByCategoryId(categoryId, code, page);
         List<Map<String, Object>> tasks = pageBean.getList();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (Map<String, Object> map : tasks) {
@@ -114,6 +147,16 @@ public class PageController {
         }
         request.setAttribute("pageBean", pageBean);
         request.getSession().setAttribute("city", city);
+        //查找该地区所有专业人士信息
+        PageBean<Map<String, Object>> pageBean1 = workerService.selectAllWorkerMessage(code, currPage);
+        List<Map<String, Object>> worker = pageBean1.getList();
+        if (worker.size() != 0) {
+            request.setAttribute("worker", worker);
+        } else {
+            request.setAttribute("msg1", "抱歉，该城市目前没有专业人士为您服务！");
+        }
+        request.setAttribute("pageBean1", pageBean1);
+
         request.getRequestDispatcher("/index").forward(request,response);
     }
 
@@ -127,13 +170,25 @@ public class PageController {
         return "historychat";
     }
 
-    @RequestMapping(value = "/myinformation" )
-    public String goMyinformation(){
+    @RequestMapping(value = "/{userId}/myinformation" )
+    public String goMyinformation(@PathVariable Integer userId,HttpServletRequest request, HttpServletResponse response){
+        Map<String, Object> myinformation = myinformationService.selectMyinformation(userId);
+        request.setAttribute("myinformation", myinformation);
+        List<Map<String, Object>> mytaskList = myinformationService.selectMyTasks(userId);
+        request.setAttribute("mytaskList",mytaskList);
         return "myinformation";
     }
 
-    @RequestMapping(value = "/mytask")
-    public String goMyTask(){
+    @RequestMapping(value = "/{userId}/mytask")
+    public String goMyTask(@RequestParam(defaultValue = "1") Integer currPage,@PathVariable Integer userId,HttpServletRequest request){
+        PageBean<Map<String, Object>> pageBean = myTaskService.selectAllMyTasks(userId, currPage);
+        request.setAttribute("pageBean_mytask", pageBean);
+        List<Map<String, Object>> mytasks = pageBean.getList();
+        if (mytasks.size() != 0) {
+            request.setAttribute("mytasks", mytasks);
+        } else {
+            request.setAttribute("msg1", "抱歉，该城市目前没有专业人士为您服务！");
+        }
         return "mytask";
     }
 }

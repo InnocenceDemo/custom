@@ -63,6 +63,8 @@
         #img1{width: 50px;height: 50px;margin-top: 18px;margin-left: 20px;}
         #information{width: 130px;height: 150px;background: red;margin-left: 20px;position: relative;z-index: 99;display: none;}
         #ul2 li{line-height: 36px;}
+        .show_worker{width: 30%;height:129px;float: left;display: inline-block;padding: 4px;}
+        #table2 td{height: 10px;}
     </style>
     <script src="${pageContext.request.contextPath}/js/jquery-3.2.0.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/template-web.js"></script>
@@ -194,7 +196,7 @@
 <body style="height: 2000px;">
 <div id="div3">
     <div id="title">
-        <a id="a1" href="${pageContext.request.contextPath}/index/${code}"><b>生活服务平台</b></a>
+        <a id="a1" href="${pageContext.request.contextPath}/index/${city.code}"><b>生活服务平台</b></a>
         <a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
         <span><c:if test="${city == null}">北京市</c:if><c:if test="${city != null}">${city.name}</c:if></span>
         <c:if test="${login_user==null}">
@@ -205,9 +207,9 @@
                 <img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
                 <div id="information">
                     <ul id="ul2">
-                        <li><a href="${pageContext.request.contextPath}/myinformation">我的信息</a></li>
+                        <li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li>
                         <li><a href="${pageContext.request.contextPath}/updateinfo">更新信息</a></li>
-                        <li><a href="${pageContext.request.contextPath}/mytask">我的任务</a></li>
+                        <li><a href="${pageContext.request.contextPath}/${login_user.id}/mytask">我的任务</a></li>
                         <li><a href="${pageContext.request.contextPath}/user1/logout">退出</a></li>
                     </ul>
                 </div>
@@ -245,6 +247,44 @@
 </div>
 <div id="div4">
     <div id="div5"><span>附近专业人士</span></div>
+    <div id="quality-area ">
+        <c:if test="${worker != null}">
+            <c:forEach items="${worker}" var="worker">
+                <div class="show_worker"  >
+                    <div id="showImg" style="width: 40%;float: left;">
+                        <a href="${pageContext.request.contextPath}/index/showDetail/${worker.workerId}">
+                            <img style="width: 137px;height: 115px;" src="${pageContext.request.contextPath}/img/${worker.image}">
+                        </a>
+                    </div>
+                    <div id="showMessage" style="width: 50%;float: left;">
+                        <span style="font-size: 20px;width: 120px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" >昵称：${worker.nickName}</span><br>
+                        <span>名字：${worker.name}</span><br>
+                        <span>职业：${worker.genre}</span><br>
+                        <span>城市：${worker.cityName}</span><br>
+                        <span>好评率：${worker.total_score}</span>
+                    </div>
+                </div>
+            </c:forEach>
+        </c:if>
+        <table border="0" cellspacing="0" cellpadding="0"  width="900px" align="center">
+            <tr>
+                <td align="right">
+                    <span>第${pageBean1.currPage}/${pageBean1.totalPage}页</span>&nbsp;&nbsp;
+                    <span>总记录数 ：${pageBean1.totalCount}条&nbsp;&nbsp;每页显示：${pageBean1.pageSize}条</span>
+                    <span>
+                        <c:if test="${pageBean1.currPage != 1}">
+                            <a href="${pageContext.request.contextPath}/index/${city.code}?currPage=1">[首页]</a>&nbsp;&nbsp;
+                            <a href="${pageContext.request.contextPath}/index/${city.code}?currPage=${pageBean1.currPage-1}">[上一页]</a>&nbsp;&nbsp;
+                        </c:if>
+                        <c:if test="${pageBean1.currPage != pageBean1.totalPage}">
+                            <a href="${pageContext.request.contextPath}/index/${city.code}?currPage=${pageBean1.currPage+1}">[下一页]</a>&nbsp;&nbsp;
+                            <a href="${pageContext.request.contextPath}/index/${city.code}?currPage=${pageBean1.totalPage}">[尾页]</a>&nbsp;&nbsp;
+                        </c:if>
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 <div id="div6">
     <div id="div7"><span id="span1">附近的任务</span><a id="a2">我有需求?</a></div>

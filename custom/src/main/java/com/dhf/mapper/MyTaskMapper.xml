@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==================代理方式=================
+由mapper标签开始，由/mapper结束，可以把它想成一个空间，是映射文件
+属性namespace：空间名，主要在代理中使用。这个namespace是唯一的。
+这里把mapper标签和接口联系在一起了，namespace=写接口路径，映射文件要和接口在同一目录下
+ -->
+<mapper namespace="com.dhf.mapper.MyTaskMapper">
+
+    <select id="selectAllMyTasks" parameterType="map" resultType="map">
+        select user_detail.realName,user_task.desc,user_task.status,user_task.finishTime,user_task.category
+        from user_task
+        join user_detail on user_task.userId=user_detail.id
+        where user_task.userId = #{userId}
+        limit #{begin},#{pageSize}
+    </select>
+    <select id="selectAllMyTasksCount" parameterType="Integer" resultType="Integer">
+        select count(*)
+        from user_task
+        join user_detail on user_task.userId=user_detail.id
+        where user_task.userId = #{userId}
+    </select>
+</mapper>

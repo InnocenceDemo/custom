@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhf.mapper.MyinformationMapper">
+
+    <select id="selectMyinformation" parameterType="Integer" resultType="map">
+        select user.image,user.nickName,user_detail.realName,user_detail.email,user.telephone,user_detail.addressDesc,user_detail.descr
+        from user
+        LEFT JOIN user_detail ON user.Id = user_detail.id
+        where user.Id = #{id}
+    </select>
+
+    <select id="selectMyTasks" parameterType="Integer" resultType="map">
+        select user_task.desc,user_task.status,user_task.finishTime
+        from user_skill
+        LEFT JOIN user_task ON user_skill.userId = user_task.workerId
+        where user_skill.userId = #{userId}
+    </select>
+</mapper>

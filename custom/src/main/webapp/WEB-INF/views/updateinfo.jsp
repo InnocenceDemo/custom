@@ -49,9 +49,9 @@
             <img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
             <div id="information">
                 <ul id="ul2">
-                    <li><a href="${pageContext.request.contextPath}/myinformation">我的信息</a></li><br>
+                    <li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li><br>
                     <li><a href="${pageContext.request.contextPath}/updateinfo">更新信息</a></li><br>
-                    <li><a href="${pageContext.request.contextPath}/mytask">我的任务</a></li><br>
+                    <li><a href="${pageContext.request.contextPath}/${login_user.id}/mytask">我的任务</a></li><br>
                     <li><a href="${pageContext.request.contextPath}/user1/logout">退出</a></li>
                 </ul>
             </div>
