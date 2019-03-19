@@ -13,4 +13,9 @@
       from city
       where code = #{code}
     </select>
+    <select id="selectCityByprovCode" parameterType="String" resultType="map">
+        select *
+        from city
+        where provincecode = #{provCode}
+    </select>
 </mapper>

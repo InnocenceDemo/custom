@@ -1,5 +1,6 @@
 package com.dhf.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.dhf.domain.PageBean;
 import com.dhf.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,14 @@ public class PageController {
     @Autowired
     private MyTaskService myTaskService;
 
+    @Autowired
+    private SkillSubmitService skillSubmitService;
+
     @RequestMapping(value = {"/index","/"})
     public ModelAndView goIndex(ModelAndView mv,HttpServletRequest request,HttpServletResponse response,Model model){
         List<Map> maps = categoryService.selectAllCategorys();
-        mv.addObject("maps", maps);
+        /*mv.addObject("maps", maps);*/
+        request.getSession().setAttribute("maps", maps);
         if(request.getSession().getAttribute("city")==null){
             Map city = new HashMap();
             city.put("id",1);
@@ -75,9 +80,11 @@ public class PageController {
     }
 
     @RequestMapping(value = "/changecity")
-    public String goChangeCity(Model model){
+    public String goChangeCity(Model model,HttpServletRequest request){
         List<Map<String, Object>> provinces = provinceService.selectAllProvinces();
         List<Map<String, Object>> citys = cityService.selectAllCitys();
+        /*request.getSession().setAttribute("provinces", provinces);
+        request.getSession().setAttribute("citys", citys);*/
         model.addAttribute("provinces", provinces);
         model.addAttribute("citys", citys);
         return "changecity";
@@ -161,10 +168,20 @@ public class PageController {
     }
 
     @RequestMapping(value = "/becomeexpert")
-    public String goBecomeexpert(){
+    public String goBecomeexpert(Model model){
+        List<Map<String, Object>> provinces = provinceService.selectAllProvinces();
+        List<Map<String, Object>> citys = cityService.selectAllCitys();
+        model.addAttribute("provinces", provinces);
+        model.addAttribute("citys", citys);
         return "becomeexpert";
     }
-
+    @RequestMapping(value = "/getcity")
+    public void getCityByCode(Model model,String provCode,HttpServletResponse response) throws IOException {
+        List<Map> city = cityService.selectCityByprovCode(provCode);
+        Map map = new HashMap();
+        map.put("city",city);
+        response.getWriter().write(JSON.toJSONString(map));
+    }
     @RequestMapping(value = "/historychat" )
     public String goHistorychat(){
         return "historychat";
@@ -190,5 +207,25 @@ public class PageController {
             request.setAttribute("msg1", "抱歉，该城市目前没有专业人士为您服务！");
         }
         return "mytask";
+    }
+    @RequestMapping("/{userId}/checkskill")
+    public String checkSkill(@PathVariable Integer userId, HttpServletResponse response,HttpServletRequest request) throws ServletException, IOException {
+        Integer reg = 0;
+        String skill = request.getParameter("example");
+        Integer skill_grade = Integer.parseInt(request.getParameter("example1"));
+        String skill_file = request.getParameter("textfield");
+        String skill_address = request.getParameter("city");
+        //查询用户是否注册成为专业人士
+        Integer isExist = skillSubmitService.selectUserSkillIsExist(userId);
+        if (isExist == 0){
+            reg = skillSubmitService.InsertUserSkillMessage(skill, skill_grade, skill_file, skill_address, userId);
+        }else{
+            reg = skillSubmitService.updateUserSkillMessage(skill, skill_grade, skill_file, skill_address,userId);
+        }
+        if(reg == 1){
+            return "redirect:/index";
+        }else{
+            return "redirect:/becomeexpert";
+        }
     }
 }

@@ -7,4 +7,5 @@ public interface CityService {
 
     List<Map<String,Object>> selectAllCitys();
     Map<String,Object> selectCityByCode(String code);
+    List<Map> selectCityByprovCode(String provCode);
 }

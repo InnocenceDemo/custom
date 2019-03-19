@@ -48,7 +48,6 @@
             })
         })
     })
-
 	</script>
 </head>
 <body>
@@ -74,17 +73,6 @@
 		<div class="model_head">
 			<h3>我发布的任务</h3>
 		</div>
-		<div class="model_option" id="model_option">
-			&nbsp;&nbsp;&nbsp;&nbsp;筛选：&nbsp;&nbsp;
-			<!-- 从数据库导入职位 -->
-			<select id="prov">
-				<option>All</option>
-				<option>外卖</option>
-				<option>月嫂</option>
-				<option>小时工</option>
-			</select>
-		</div>
-
 		<div class="model_body">
 			<table>
 				<tr class="th">
@@ -112,7 +100,7 @@
 						<tr><td colspan="5">当前无任务记录</td></tr>
 				</c:if>
 			</table>
-			<table border="0" cellspacing="0" cellpadding="0"  width="900px" align="center">
+			<table border="0" cellspacing="0" cellpadding="0"  width="auto" align="center">
 				<tr>
 					<td align="right">
 						<span>第${pageBean_mytask.currPage}/${pageBean_mytask.totalPage}页</span>&nbsp;&nbsp;
@@ -131,5 +119,20 @@
 				</tr>
 			</table>
 		</div>
+		<script type="text/javascript">
+            var oImg1 = document.getElementById('img1');
+            var oDiv2 = document.getElementById('information');
+
+            var flag=true;
+            oImg1.onclick=function () {
+                if (flag) {
+                    oDiv2.style.display = 'block';
+                    flag=false;
+                } else {
+                    oDiv2.style.display = 'none';
+                    flag=true;
+                }
+            }
+		</script>
 </body>
 </html>

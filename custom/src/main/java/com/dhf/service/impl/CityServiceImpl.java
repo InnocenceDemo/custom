@@ -26,4 +26,8 @@ public class CityServiceImpl implements CityService {
         return cityMapper.selectCityByCode(code);
     }
 
+    @Override
+    public List<Map> selectCityByprovCode(String provCode) {
+        return cityMapper.selectCityByprovCode(provCode);
+    }
 }

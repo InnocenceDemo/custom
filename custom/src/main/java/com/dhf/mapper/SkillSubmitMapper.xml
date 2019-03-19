@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dhf.mapper.SkillSubmitMapper">
+
+    <insert id="InsertUserSkillMessage" parameterType="map">
+        INSERT INTO user_skill ( userId, skill,skill_grade,total_score,skill_address,skill_file )
+                       VALUES
+                       ( #{userId}, #{skill}, #{skill_grade},100, #{skill_address}, #{skill_file});
+    </insert>
+
+    <select id="selectUserSkillIsExist" parameterType="Integer" resultType="Integer">
+        SELECT count(*)
+        FROM user_skill
+        WHERE userId = #{userId}
+    </select>
+
+    <update id="updateUserSkillMessage" parameterType="map">
+        UPDATE user_skill
+        SET skill = #{skill},skill_grade = #{skill_grade},total_score = '100',skill_address = #{skill_address},skill_file = #{skill_file}
+        WHERE userId = #{userId}
+    </update>
+</mapper>
