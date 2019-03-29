@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhf.mapper.MyinformationMapper">
+
+    <select id="selectMyinformation" parameterType="Integer" resultType="map">
+        select user1.image,user1.nickName,user_detail.realName,user_detail.email,user1.telephone,user_detail.addressDesc,user_detail.descr
+        from user1
+        LEFT JOIN user_detail ON user1.Id = user_detail.id
+        where user1.Id = #{id}
+    </select>
+
+    <select id="selectMyTasks" parameterType="Integer" resultType="map">
+        select user_task.desc,user_task.status,user_task.finishTime
+        from user_skill
+        LEFT JOIN user_task ON user_skill.userId = user_task.workerId
+        where user_skill.userId = #{userId}
+    </select>
+
+    <select id="selectMyinformationByuserId" parameterType="Integer" resultType="map">
+        select user1.name1,user1.nickName,user1.telephone,user_detail.realName,user_detail.cardNo,user1.sex,user_detail.birthday,user_detail.email,city.name,user_detail.addressDesc,user_detail.descr
+        from user_detail
+        LEFT JOIN user1 ON user_detail.Id = user1.Id
+        LEFT JOIN city ON user_detail.address = city.code
+        where user_detail.Id = #{userId}
+    </select>
+
+    <update id="updateUserMessage" parameterType="map" >
+        UPDATE user_detail
+        JOIN user1 ON user_detail.Id = user1.Id
+        SET user1.nickName = #{user.nickName}, user_detail.realName = #{userDetail.realName}, user_detail.cardNo = #{userDetail.cardNo}, user1.sex = #{user.sex}, user_detail.birthday = #{userDetail.birthday}, user_detail.email = #{userDetail.email}, user_detail.addressDesc = #{userDetail.addressDesc}, user_detail.descr = #{userDetail.descr}
+        WHERE user_detail.Id = #{user_detail.id}
+    </update>
+
+</mapper>

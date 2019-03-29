@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.dhf.mapper.CreateRequestMapper">
+    <insert id="InsertCreateRequestMessage" parameterType="map">
+        INSERT INTO user_task
+        (userId, categoryId, category, STATUS, user_task.DESC, workerId, bonus, maxbonus, score, appraise, address, createTime, finishTime, finishedime)
+        VALUES(#{userId},#{categoryId},#{category},0,#{desc},NULL,#{bonus},#{maxbonus},NULL,0,#{address},#{nowDate},#{date},NULL)
+    </insert>
+
+</mapper>
