@@ -13,7 +13,7 @@
         where name1=#{name1}
     </select>
     <select id="checkLogin" parameterType="User1" resultType="User1">
-        select Id,name1,pwd,nickName,telephone
+        select Id,name1,pwd,nickName,telephone,image
         from user1
         where name1=#{name1} and pwd=#{pwd}
     </select>
@@ -24,5 +24,10 @@
     </select>
     <update id="updateTaskWokerId" parameterType="map">
         UPDATE user_task set workerId = #{userId},status = 1 where id = #{id}
+    </update>
+    <update id="updateImageById" parameterType="User1">
+        update user1
+        set image=#{image}
+        where Id=#{Id}
     </update>
 </mapper>

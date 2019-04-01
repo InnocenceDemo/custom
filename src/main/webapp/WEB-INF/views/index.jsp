@@ -61,10 +61,12 @@
         #a4{background: #d74f2a;color: #fff;padding: 5px 5px;}
         #div9{width: 150px;height: 200px;float: right;}
         #img1{width: 50px;height: 50px;margin-top: 18px;margin-left: 20px;}
-        #information{width: 130px;height: 150px;background: red;margin-left: 20px;position: relative;z-index: 99;display: none;}
-        #ul2 li{line-height: 36px;}
+        #information{width: 130px;height: 150px;margin-left: 20px;position: relative;z-index: 99;display: none;}
+        .haha{background-color: #ccc;color: #000;}
+        #ul2 li{line-height: 36px;text-align: center;}
         .show_worker{width: 30%;height:129px;float: left;display: inline-block;padding: 4px;}
         #table2 td{height: 10px;}
+        img{border-radius:50%;}
     </style>
     <script src="${pageContext.request.contextPath}/js/jquery-3.2.0.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/template-web.js"></script>
@@ -189,6 +191,16 @@
         }
 
     </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#ul2 li').mouseover(function(){
+                $(this).addClass("haha");
+            });
+            $('#ul2 li').mouseout(function(){
+                $(this).removeClass();
+            });
+        })
+    </script>
 </head>
 <body style="height: 2000px;">
 <div id="div3">
@@ -201,7 +213,7 @@
         </c:if>
         <c:if test="${login_user != null}">
             <div id="div9">
-                <img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
+                <img id="img1" src="<%=request.getContextPath()%>/upload/${login_user.image}" />
                 <div id="information">
                     <ul id="ul2">
                         <li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li>
@@ -250,7 +262,7 @@
                 <div class="show_worker"  >
                     <div id="showImg" style="width: 40%;float: left;">
                         <a href="${pageContext.request.contextPath}/index/showDetail/${worker.workerId}">
-                            <img style="width: 137px;height: 115px;" src="${pageContext.request.contextPath}/img/${worker.image}">
+                            <img style="width: 137px;height: 115px;" src="<%=request.getContextPath()%>/upload/${worker.image}">
                         </a>
                     </div>
                     <div id="showMessage" style="width: 50%;float: left;">

@@ -92,16 +92,21 @@
             margin-left: 20px;
         }
 
-        #information {
-            width: 130px;
-            height: 150px;
-            background: red;
-            margin-left: 20px;
-            position: relative;
-            z-index: 99;
-            display: none;
-        }
+        #information{width: 130px;height: 150px;margin-left: 20px;position: relative;z-index: 99;display: none;}
+        .haha{background-color: #ccc;color: #000;}
+        #ul2 li{line-height: 36px;text-align: center;}
+        img{border-radius:50%;}
     </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#ul2 li').mouseover(function(){
+                $(this).addClass("haha");
+            });
+            $('#ul2 li').mouseout(function(){
+                $(this).removeClass();
+            });
+        })
+    </script>
 </head>
 <body>
 <!-- 悬赏专家 -->
@@ -111,7 +116,7 @@
         <a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
         <span>北京市</span>
         <div id="div9">
-            <img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
+            <img id="img1" src="<%=request.getContextPath()%>/upload/${login_user.image}"/>
             <div id="information">
                 <ul id="ul2">
                     <li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li>

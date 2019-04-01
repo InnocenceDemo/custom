@@ -49,6 +49,16 @@
         });
 
 	</script>
+	<script type="text/javascript">
+        $(document).ready(function(){
+            $('#ul2 li').mouseover(function(){
+                $(this).addClass("haha");
+            });
+            $('#ul2 li').mouseout(function(){
+                $(this).removeClass();
+            });
+        })
+	</script>
 
 	<style>
 		*{padding: 0;margin: 0;}
@@ -62,8 +72,10 @@
 		.a1{float: right;margin-top: 30px;margin-left: 20px;}
 		#div9{width: 150px;height: 200px;float: right;}
 		#img1{width: 50px;height: 50px;margin-top: 18px;margin-left: 20px;}
-		#information{width: 130px;height: 150px;background: red;margin-left: 20px;position: relative;z-index: 99;display: none;}
-		#ul2 li{line-height: 36px;}
+		#information{width: 130px;height: 150px;margin-left: 20px;position: relative;z-index: 99;display: none;}
+		.haha{background-color: #ccc;color: #000;}
+		#ul2 li{line-height: 36px;text-align: center;}
+        img{border-radius:50%;}
 	</style>
 <body>
 <div id="div3">
@@ -76,7 +88,7 @@
 		</c:if>
 		<c:if test="${login_user != null}">
 			<div id="div9">
-				<img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
+				<img id="img1" src="<%=request.getContextPath()%>/upload/${login_user.image}"/>
 				<div id="information">
 					<ul id="ul2">
 						<li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li>

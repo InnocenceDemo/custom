@@ -34,9 +34,11 @@
         .a2{background: #f5f5f5;color: #333333}
         #div9{width: 150px;height: 200px;float: right;}
         #img1{width: 50px;height: 50px;margin-top: 18px;margin-left: 20px;}
-        #information{width: 130px;height: 150px;background: red;margin-left: 20px;position: relative;z-index: 99;display: none;}
-        #ul2 li{line-height: 36px;}
+        #information{width: 130px;height: 150px;margin-left: 20px;position: relative;z-index: 99;display: none;}
+        .haha{background-color: #ccc;color: #000;}
+        #ul2 li{line-height: 36px;text-align: center;}
         .a1{float: right;margin-top: 30px;margin-left: 20px;}
+        img{border-radius:50%;}
     </style>
 
     <script src="${pageContext.request.contextPath}/js/jquery-3.2.0.min.js"></script>
@@ -62,6 +64,12 @@
                     $('#city').html("<option value=''>"+"----请选择----"+"</option>");
                 }
             });
+            $('#ul2 li').mouseover(function(){
+                $(this).addClass("haha");
+            });
+            $('#ul2 li').mouseout(function(){
+                $(this).removeClass();
+            });
         });
 
     </script>
@@ -74,7 +82,7 @@
         <a class="a2" href="${pageContext.request.contextPath}/changecity">切换城市</a>
         <span><c:if test="${sessionScope.city == null}">北京市</c:if><c:if test="${sessionScope.city != null}">${sessionScope.city.name}</c:if></span>
         <div id="div9">
-            <img id="img1" src="${pageContext.request.contextPath}/img/default.png"/>
+            <img id="img1" src="<%=request.getContextPath()%>/upload/${login_user.image}"/>
             <div id="information">
                 <ul id="ul2">
                     <li><a href="${pageContext.request.contextPath}/${login_user.id}/myinformation">我的信息</a></li>
@@ -90,14 +98,14 @@
 </div>
 <div id="r">
     <h3>个人信息</h3>
-    <form action="${pageContext.request.contextPath}/user1/${login_user.id}/update" method="post">
+    <form action="${pageContext.request.contextPath}/user1/${login_user.id}/update" method="post" enctype="multipart/form-data">
         <div id="div1">
             <div style="float: left;">
                 <label >头像&nbsp;</label>&nbsp;
             </div>
             <div style="width: 60%;display: block;position: relative;float: left;">
                 <input type="file" style="" onchange="handleFiles(this,'icon')" id="input1" name="input1">
-                <img src="${showMyinformation.image}" style="height: 100px; width: 100px;" id="icon">
+                <img src="<%=request.getContextPath()%>/upload/${login_user.image}" style="height: 100px; width: 100px;" id="icon" name="image">
             </div>
         </div>
         <div class="bor">

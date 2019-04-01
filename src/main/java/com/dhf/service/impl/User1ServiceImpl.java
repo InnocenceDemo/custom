@@ -6,6 +6,7 @@ import com.dhf.service.User1Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,5 +44,10 @@ public class User1ServiceImpl implements User1Service {
         map.put("userId",userId);
         map.put("id",id);
         user1Mapper.updateTaskWokerId(map);
+    }
+    @Override
+    public int updateImageById(User1 user1) {
+        int i = user1Mapper.updateImageById(user1);
+        return i;
     }
 }

@@ -2,6 +2,8 @@ package com.dhf.service;
 
 import com.dhf.domain.User1;
 
+import java.io.IOException;
+
 public interface User1Service {
 
     Integer reg(User1 user1);
@@ -10,4 +12,7 @@ public interface User1Service {
     Integer selectUserSkillExist(Integer userId);
 
     void updateTaskWokerId(Integer user1,Integer id);
+
+    //根据用户id更改用户头像
+    int updateImageById(User1 user1);
 }

@@ -18,6 +18,8 @@ public interface User1Mapper {
     Integer selectUserSkillExist(Integer userId);
     //修改任务信息中的wokerId
     void updateTaskWokerId(Map map);
+
+    int updateImageById(User1 user1);
     //根据用户id更改用户头像
 //    int updateHead_urlById(Userinfo userinfo);
 }

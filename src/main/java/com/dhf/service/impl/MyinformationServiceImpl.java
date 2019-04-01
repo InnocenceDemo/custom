@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Character.getType;
+
 @Service
 public class MyinformationServiceImpl implements MyinformationService {
 
@@ -33,11 +35,7 @@ public class MyinformationServiceImpl implements MyinformationService {
     }
 
     @Override
-    public Integer updateUserMessage(User1 user, UserDetail userDetail) {
-        Map map = new HashMap();
-        map.put("user",user);
-        map.put("userDetail",userDetail);
-        /*System.out.println(map);*/
-        return myinformationMapper.updateUserMessage(map);
+    public Integer updateUserMessage(User1 user1, UserDetail userDetail) {
+        return myinformationMapper.updateUserMessage(user1,userDetail);
     }
 }

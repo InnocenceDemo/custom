@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/user1")
@@ -84,9 +86,8 @@ public class User1Controller {
 
     @RequestMapping(value = "/{userId}/update")
     /*对应方法中使用两个对象来接受参数，会报400错误（错误的请求），请求参数赋不到对象的属性上*/
-    public String update(@PathVariable Integer userId, HttpServletRequest request) {
-        //获取表单参数
-        String image = request.getParameter("image");//头像
+    public String update(MultipartFile input1,@PathVariable Integer userId, HttpServletRequest request,HttpServletResponse response) throws IOException {
+
         String nickName = request.getParameter("nickName");//昵称
         String realName = request.getParameter("realName");//真实姓名
         String cardNo = request.getParameter("cardNo");//身份证号
@@ -97,9 +98,37 @@ public class User1Controller {
         String addressDesc = request.getParameter("addressDesc");//详细地址
         String descr = request.getParameter("descr");//自我评价
 
-        /*User1 user = (User1)request.getSession().getAttribute("login_user");*/
+        //   获取文件名
+        String fileName = input1.getOriginalFilename();
+
+        //获取上传路径
+        String uploadPath = request.getRealPath("/upload");
+        File file = new File(uploadPath);
+        //若上传路径不存在，新建路径
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        //上传文件最终的路径
+        String newName = UUID.randomUUID() + fileName;
+        String finalName = uploadPath + File.separator + newName;
+        File finalFile = new File(finalName);
+        //上传到指定路径
+        input1.transferTo(finalFile);
+        response.getWriter().println(request.getContextPath() + "/upload/" + newName);
+
+        //1.先更改userinfo表head_url
+        Object login_user = request.getSession().getAttribute("login_user");
+        User1 userinfo = (User1) login_user;
+        int id = userinfo.getId();
+        User1 user1 = new User1();
+        user1.setId(id);
+        user1.setImage(newName);
+        int i = user1Service.updateImageById(user1);
+        //2.改下session
+        userinfo.setImage(newName);
+        request.getSession().setAttribute("login_user", userinfo);
+
         User1 user = new User1();
-        user.setImage(image);
         user.setNickName(nickName);
         user.setSex(sex);
         user.setId(userId);
@@ -113,10 +142,9 @@ public class User1Controller {
         userDetail.setEmail(email);
         userDetail.setAddressDesc(addressDesc);
         userDetail.setDescr(descr);
-        /*System.out.println(user+"\n"+userDetail);*/
         Integer reg = myinformationService.updateUserMessage(user, userDetail);
-        System.out.println(reg);
-        return "index";
+
+        return "forward:/index";
     }
 
     @RequestMapping("/createRequest")

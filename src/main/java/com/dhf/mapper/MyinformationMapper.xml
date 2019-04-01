@@ -26,11 +26,11 @@
         where user_detail.Id = #{userId}
     </select>
 
-    <update id="updateUserMessage" parameterType="map" >
+    <update id="updateUserMessage" >
         UPDATE user_detail
         JOIN user1 ON user_detail.Id = user1.Id
-        SET user1.nickName = #{user.nickName}, user_detail.realName = #{userDetail.realName}, user_detail.cardNo = #{userDetail.cardNo}, user1.sex = #{user.sex}, user_detail.birthday = #{userDetail.birthday}, user_detail.email = #{userDetail.email}, user_detail.addressDesc = #{userDetail.addressDesc}, user_detail.descr = #{userDetail.descr}
-        WHERE user_detail.Id = #{user_detail.id}
+        SET user1.nickName = #{user.nickName}, user_detail.realName = #{userdetail.realName}, user_detail.cardNo = #{userdetail.cardNo}, user1.sex = #{user.sex}, user_detail.birthday = #{userdetail.birthday}, user_detail.email = #{userdetail.email}, user_detail.addressDesc = #{userdetail.addressDesc}, user_detail.descr = #{userdetail.descr}
+        WHERE user_detail.Id = #{userdetail.id}
     </update>
 
 </mapper>
